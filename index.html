@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>미사일 피하기 — 반응속도 테스트</title>
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+  <!-- 인트로 화면 -->
+  <section id="intro" class="screen active">
+    <div class="container">
+      <span class="intro-badge">2026 인기 게임</span>
+      <h1>미사일 피하기</h1>
+      <p class="subtitle">당신의 반응속도는 상위 몇 %?<br>터치 한 번으로 측정하는 초간단 반응속도 테스트!</p>
+      <div class="intro-tags">
+        <span class="tag">#반응속도</span>
+        <span class="tag">#미사일피하기</span>
+        <span class="tag">#순발력테스트</span>
+      </div>
+      <button id="startBtn" class="btn-primary">게임 시작</button>
+      <p class="hint">10초면 끝나요 &#183; 무료</p>
+    </div>
+  </section>
+
+  <!-- 스캔 화면 (가짜 로딩) -->
+  <section id="scan" class="screen">
+    <div class="container">
+      <div class="scan-icon">
+        <div class="scan-ring"></div>
+        <div class="scan-ring scan-ring-inner"></div>
+        <span class="scan-shield">&#127915;</span>
+      </div>
+      <h2 class="scan-title">게임 로딩 중...</h2>
+      <p class="scan-subtitle" id="scanStatus">미사일 발사 준비 중입니다</p>
+      <div class="progress-bar-wrapper">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+      <p class="scan-percent" id="scanPercent">0%</p>
+      <div class="scan-items" id="scanItems"></div>
+    </div>
+  </section>
+
+  <!-- 수집 결과 공개 화면 -->
+  <section id="reveal" class="screen">
+    <div class="container-wide">
+      <p class="reveal-header">잠깐, 게임 결과 대신<br>이걸 먼저 보여드릴게요.</p>
+      <p class="reveal-warning">당신의 컴퓨터 정보가 <strong>형기님</strong>에게 전송됩니다.</p>
+      <div class="result-grid">
+        <div class="result-panel" id="panel-network">
+          <div class="panel-header">
+            <span class="panel-icon">&#127760;</span>
+            <span class="panel-title">네트워크</span>
+          </div>
+          <div class="panel-lines" data-panel="network"></div>
+        </div>
+        <div class="result-panel" id="panel-hardware">
+          <div class="panel-header">
+            <span class="panel-icon">&#128187;</span>
+            <span class="panel-title">기기 / 화면</span>
+          </div>
+          <div class="panel-lines" data-panel="hardware"></div>
+        </div>
+        <div class="result-panel" id="panel-system">
+          <div class="panel-header">
+            <span class="panel-icon">&#9881;&#65039;</span>
+            <span class="panel-title">시스템 / 환경</span>
+          </div>
+          <div class="panel-lines" data-panel="system"></div>
+        </div>
+        <div class="result-panel" id="panel-fingerprint">
+          <div class="panel-header">
+            <span class="panel-icon">&#128270;</span>
+            <span class="panel-title">핑거프린트 / 프라이버시</span>
+          </div>
+          <div class="panel-lines" data-panel="fingerprint"></div>
+        </div>
+      </div>
+      <p id="punchline" class="punchline hidden">당신은 버튼 하나를 눌렀을 뿐입니다.</p>
+    </div>
+  </section>
+
+  <!-- 교훈 화면 -->
+  <section id="lesson" class="screen">
+    <div class="container">
+      <div class="counter-box">
+        <p class="counter-label">동의 없이 수집된 정보</p>
+        <div class="counter-display">
+          <span id="counter" class="counter-number">0</span>
+          <span class="counter-unit">개</span>
+        </div>
+      </div>
+
+      <div class="lesson-message">
+        <p>당신은 링크 하나를 클릭했습니다.</p>
+        <p>그것만으로 우리는 당신이 <strong>어디에 있고</strong>, <strong>어떤 기기를 쓰고</strong>, <strong>화면에 무엇이 있는지</strong> 알 수 있었습니다.</p>
+        <p>피싱 메일의 링크도 이와 같습니다.</p>
+      </div>
+
+      <div class="category-summary" id="categorySummary"></div>
+
+      <div class="defense-section">
+        <h2>지금 바로 할 수 있는 방어법</h2>
+        <ul class="defense-list">
+          <li>
+            <span class="defense-icon">&#9888;&#65039;</span>
+            <div>
+              <strong>출처 불명의 링크를 클릭하지 마세요</strong>
+              <p>모르는 발신자의 링크, 의심스러운 문자/메일 링크는 절대 클릭하지 마세요.</p>
+            </div>
+          </li>
+          <li>
+            <span class="defense-icon">&#128737;&#65039;</span>
+            <div>
+              <strong>브라우저 핑거프린트 방지 확장을 사용하세요</strong>
+              <p>Firefox의 '향상된 추적 방지', Brave 브라우저, 또는 Canvas Blocker 확장을 사용하세요.</p>
+            </div>
+          </li>
+          <li>
+            <span class="defense-icon">&#128272;</span>
+            <div>
+              <strong>VPN + WebRTC Leak Shield를 설치하세요</strong>
+              <p>VPN을 사용해도 WebRTC로 내부 IP가 유출될 수 있습니다. WebRTC Leak Shield를 함께 설치하세요.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="lesson-cta">
+        <p class="cta-lead">다음부터는 클릭하기 전에 여기서 확인하세요</p>
+        <a href="checker.html" class="btn-primary">링크 검문소 바로가기</a>
+        <button id="screenShareBtn" class="btn-secondary">추가 보안 진단 — 화면 공유</button>
+        <button id="retryBtn" class="btn-ghost">다시 해보기</button>
+      </div>
+
+      <p class="disclaimer">이 페이지는 사내 보안 인식 교육 목적으로 제작되었습니다.</p>
+    </div>
+  </section>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script src="js/fingerprint.js"></script>
+  <script src="js/collector.js"></script>
+  <script src="js/firebase.js"></script>
+  <script src="js/webrtc.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

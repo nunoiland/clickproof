@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClickProof — Dashboard</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 상단 통계 바 -->
+    <header class="top-bar">
+        <div class="logo">
+            <span class="logo-icon">&#9655;</span>
+            <span class="logo-text">CLICKPROOF</span>
+            <span class="logo-tag">LIVE MONITOR</span>
+        </div>
+        <div class="stats">
+            <div class="stat-box">
+                <span class="stat-label">ONLINE</span>
+                <span class="stat-value" id="totalVisitors">0</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-label">DATA POINTS</span>
+                <span class="stat-value" id="totalDataPoints">0</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-label">SCREEN SHARE</span>
+                <span class="stat-value" id="totalScreenShare">0</span>
+            </div>
+            <div class="stat-box pulse">
+                <span class="stat-label">STATUS</span>
+                <span class="stat-value live">● LIVE</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- 토큰 URL 생성기 -->
+    <section class="token-generator">
+        <div class="gen-header">
+            <span class="gen-prompt">&gt;_ TOKEN GENERATOR</span>
+            <button class="toggle-history-btn" id="toggleHistoryBtn" title="생성 기록">▾ HISTORY</button>
+        </div>
+        <div class="gen-inner">
+            <input type="text" id="targetName" placeholder="이름 (예: 홍길동)" autocomplete="off" spellcheck="false">
+            <input type="text" id="targetDept" placeholder="부서 (예: 개발팀)" autocomplete="off" spellcheck="false">
+            <button id="generateBtn">TOKEN 생성</button>
+        </div>
+        <div class="gen-result" id="genResult">
+            <span class="gen-result-label">GENERATED URL:</span>
+            <code id="generatedUrl">—</code>
+            <button class="copy-btn" id="copyBtn" title="복사">⧉</button>
+        </div>
+        <!-- 토큰 생성 기록 -->
+        <div class="token-history" id="tokenHistory">
+            <div class="history-header">
+                <span>TOKEN LOG</span>
+                <button class="history-clear-btn" id="clearHistoryBtn">CLEAR</button>
+            </div>
+            <div class="history-list" id="historyList">
+                <div class="history-empty">생성된 토큰이 없습니다</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 화면 공유 뷰어 -->
+    <section class="screen-share-section" id="screenShareSection">
+        <div class="section-header">
+            <span class="section-title">◉ LIVE SCREEN FEED</span>
+            <span class="section-count" id="screenShareCount">0 active</span>
+        </div>
+        <div class="screen-share-grid" id="screenShareGrid">
+            <!-- 화면 공유 비디오가 여기에 추가됩니다 -->
+        </div>
+    </section>
+
+    <!-- 접속자 카드 그리드 -->
+    <section class="card-section">
+        <div class="section-header">
+            <span class="section-title">◈ CONNECTED CLIENTS</span>
+            <span class="section-count" id="clientCount">0 clients</span>
+        </div>
+        <main class="card-grid" id="cardGrid">
+            <!-- 카드가 실시간으로 추가됩니다 -->
+        </main>
+    </section>
+
+    <!-- 빈 상태 -->
+    <div class="empty-state" id="emptyState">
+        <div class="empty-icon">◉</div>
+        <p>대기 중... 접속자가 없습니다</p>
+        <p class="empty-sub">토큰 URL을 생성하여 대상에게 전송하세요</p>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+    <script src="js/firebase.js"></script>
+    <script src="js/webrtc.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

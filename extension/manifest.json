@@ -1,0 +1,52 @@
+{
+  "manifest_version": 3,
+  "name": "ClickProof - 링크 검문소",
+  "version": "1.0.0",
+  "description": "URL의 안전성을 실시간으로 분석하여 피싱 및 악성 사이트로부터 보호합니다. 한국형 타이포스쿼팅 감지, 스미싱 키워드 탐지, 금융기관 인증 등 13개 항목을 분석합니다. 모든 분석은 기기에서 로컬로 수행되며 어떠한 데이터도 외부로 전송하지 않습니다.",
+
+  "permissions": [
+    "activeTab",
+    "webNavigation",
+    "storage"
+  ],
+
+  "background": {
+    "service_worker": "background.js"
+  },
+
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "ClickProof - URL 안전 검사",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    }
+  },
+
+  "icons": {
+    "16": "icons/icon-16.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["lib/korean-domains.js", "lib/url-analyzer.js", "content.js"],
+      "run_at": "document_start"
+    },
+    {
+      "matches": ["<all_urls>"],
+      "js": ["lib/korean-domains.js", "lib/url-analyzer.js", "content-features.js", "content-protection.js", "content-smishing.js"],
+      "run_at": "document_idle"
+    }
+  ],
+
+  "web_accessible_resources": [
+    {
+      "resources": ["warning.html", "icons/*.png"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

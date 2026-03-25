@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>링크 검문소 — URL 안전도 분석</title>
+  <link rel="stylesheet" href="css/checker.css">
+</head>
+<body>
+  <div class="checker-app">
+    <!-- 헤더 -->
+    <header class="checker-header">
+      <div class="header-inner">
+        <a href="index.html" class="back-link">&larr; 지금 몇 점?</a>
+        <button id="themeToggle" class="theme-toggle" aria-label="다크/라이트 모드 전환">
+          <span class="icon-sun">&#9728;</span>
+          <span class="icon-moon">&#9790;</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- 메인 -->
+    <main class="checker-main">
+      <!-- 입력 섹션 -->
+      <section class="input-section">
+        <h1 class="title">링크 검문소</h1>
+        <p class="subtitle">클릭하기 전에 확인하세요. URL 구조를 3계층으로 분석합니다.</p>
+
+        <form id="urlForm" class="url-form">
+          <div class="input-wrapper">
+            <input
+              type="text"
+              id="urlInput"
+              class="url-input"
+              placeholder="검사할 URL을 입력하세요"
+              autocomplete="off"
+              spellcheck="false"
+              required
+            >
+            <button type="submit" id="analyzeBtn" class="analyze-btn">검사</button>
+          </div>
+          <div class="example-urls">
+            <span class="example-label">예시:</span>
+            <button type="button" class="example-btn" data-url="https://naver.com">naver.com</button>
+            <button type="button" class="example-btn" data-url="https://navor.com/login/verify">navor.com</button>
+            <button type="button" class="example-btn" data-url="https://bit.ly/3xK9mQ">bit.ly/3xK9mQ</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- 프로그레스 -->
+      <section id="progressSection" class="progress-section hidden">
+        <div class="progress-bar-container">
+          <div id="progressBar" class="progress-bar"></div>
+        </div>
+        <div class="progress-stages">
+          <div id="stage1" class="stage">
+            <span class="stage-dot"></span>
+            <span class="stage-label">구조 분석</span>
+          </div>
+          <div id="stage2" class="stage">
+            <span class="stage-dot"></span>
+            <span class="stage-label">DB 조회</span>
+          </div>
+          <div id="stage3" class="stage">
+            <span class="stage-dot"></span>
+            <span class="stage-label">리다이렉트</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 결과 섹션 -->
+      <section id="resultSection" class="result-section hidden">
+        <!-- 종합 점수 -->
+        <div class="score-card">
+          <div id="scoreCircle" class="score-circle">
+            <svg viewBox="0 0 120 120">
+              <circle class="score-bg" cx="60" cy="60" r="52" />
+              <circle id="scoreArc" class="score-arc" cx="60" cy="60" r="52" />
+            </svg>
+            <div class="score-value">
+              <span id="scoreNumber">0</span>
+              <span class="score-unit">점</span>
+            </div>
+          </div>
+          <div id="scoreBadge" class="score-badge">분석 중</div>
+          <p id="scoreMessage" class="score-message"></p>
+        </div>
+
+        <!-- Layer 1: 구조 분석 -->
+        <div class="layer-section">
+          <div class="layer-header">
+            <h2 class="layer-title">
+              <span class="layer-num">L1</span>
+              구조 분석
+            </h2>
+            <span class="layer-tag">클라이언트 즉시 판정</span>
+          </div>
+          <div id="layer1Items" class="check-items"></div>
+        </div>
+
+        <!-- Layer 2: 외부 DB -->
+        <div class="layer-section">
+          <div class="layer-header">
+            <h2 class="layer-title">
+              <span class="layer-num">L2</span>
+              외부 DB 조회
+            </h2>
+            <span class="layer-tag">블랙리스트 DB</span>
+          </div>
+          <div id="layer2Items" class="check-items"></div>
+        </div>
+
+        <!-- Layer 3: 리다이렉트 -->
+        <div class="layer-section">
+          <div class="layer-header">
+            <h2 class="layer-title">
+              <span class="layer-num">L3</span>
+              리다이렉트 추적
+            </h2>
+            <span class="layer-tag">최종 목적지 확인</span>
+          </div>
+          <div id="layer3Items" class="check-items"></div>
+          <div id="redirectChain" class="redirect-chain hidden"></div>
+        </div>
+
+        <!-- 위험 요약 -->
+        <div id="dangerSummary" class="danger-summary hidden">
+          <h3>이 URL이 위험한 이유</h3>
+          <ul id="dangerReasons"></ul>
+        </div>
+
+        <!-- 연계 메시지 -->
+        <div class="link-message">
+          <p>이 링크를 클릭했다면, <a href="index.html">이런 정보가 노출</a>되었을 것입니다.</p>
+        </div>
+      </section>
+    </main>
+
+    <!-- 푸터 -->
+    <footer class="checker-footer">
+      <p>이 도구는 사내 보안 인식 교육 목적으로 제작되었습니다.</p>
+      <p class="footer-sub">블랙리스트 없이 URL 구조만으로 제로데이 피싱을 탐지합니다.</p>
+    </footer>
+  </div>
+
+  <script type="module" src="js/checker.js"></script>
+</body>
+</html>

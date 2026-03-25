@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ClickProof - 위험 사이트 경고</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #1a0000 0%, #2d0a0a 50%, #0f172a 100%);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      color: #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      max-width: 520px;
+      padding: 40px;
+      text-align: center;
+    }
+    .shield {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 24px;
+    }
+    .shield svg {
+      width: 100%;
+      height: 100%;
+    }
+    h1 {
+      font-size: 24px;
+      color: #ef4444;
+      margin-bottom: 12px;
+    }
+    .score-badge {
+      display: inline-block;
+      background: rgba(239,68,68,0.15);
+      border: 2px solid #ef4444;
+      color: #ef4444;
+      font-size: 36px;
+      font-weight: 800;
+      width: 72px;
+      height: 72px;
+      line-height: 68px;
+      border-radius: 50%;
+      margin: 16px 0;
+    }
+    .description {
+      color: #94a3b8;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+    .url-display {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-family: monospace;
+      font-size: 12px;
+      color: #ef4444;
+      word-break: break-all;
+      margin-bottom: 24px;
+      text-align: left;
+    }
+    .actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+    .btn-back {
+      background: #22c55e;
+      color: #fff;
+    }
+    .btn-back:hover { background: #16a34a; }
+    .btn-proceed {
+      background: transparent;
+      border: 1px solid #475569;
+      color: #94a3b8;
+    }
+    .btn-proceed:hover {
+      border-color: #ef4444;
+      color: #ef4444;
+    }
+    .confirm-section {
+      display: none;
+      margin-top: 20px;
+      padding: 16px;
+      background: rgba(239,68,68,0.1);
+      border: 1px solid #ef4444;
+      border-radius: 8px;
+    }
+    .confirm-section p {
+      color: #f87171;
+      font-size: 13px;
+      margin-bottom: 12px;
+    }
+    .confirm-section .actions {
+      gap: 8px;
+    }
+    .btn-confirm {
+      background: #ef4444;
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-confirm:hover { background: #dc2626; }
+    .btn-cancel {
+      background: #334155;
+      color: #94a3b8;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+      border: none;
+    }
+    .footer {
+      margin-top: 32px;
+      font-size: 11px;
+      color: #475569;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="shield">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2">
+        <path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7L12 2z"/>
+        <line x1="12" y1="8" x2="12" y2="13"/>
+        <circle cx="12" cy="16" r="0.5" fill="#ef4444"/>
+      </svg>
+    </div>
+
+    <h1>위험한 사이트가 감지되었습니다</h1>
+
+    <div class="score-badge" id="score">0</div>
+
+    <p class="description">
+      ClickProof가 이 URL을 분석한 결과 <strong>위험</strong> 수준으로 판단했습니다.<br>
+      피싱, 악성코드, 사기 사이트일 가능성이 있습니다.<br>
+      개인정보나 금융 정보를 절대 입력하지 마세요.
+    </p>
+
+    <div class="url-display" id="blockedUrl">-</div>
+
+    <div class="actions">
+      <button class="btn btn-back" id="btnBack">안전한 페이지로 돌아가기</button>
+      <button class="btn btn-proceed" id="btnProceed">위험을 감수하고 이동</button>
+    </div>
+
+    <div class="confirm-section" id="confirmSection">
+      <p>정말로 이 사이트에 접속하시겠습니까?<br>이 도메인을 허용 목록에 추가합니다.</p>
+      <div class="actions">
+        <button class="btn-cancel" id="btnCancel">취소</button>
+        <button class="btn-confirm" id="btnConfirm">그래도 이동</button>
+      </div>
+    </div>
+
+    <div class="footer">ClickProof 링크 검문소에 의해 차단되었습니다.</div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const blockedUrl = params.get('url') || '';
+    const score = params.get('score') || '0';
+
+    document.getElementById('score').textContent = score;
+    document.getElementById('blockedUrl').textContent = blockedUrl || '알 수 없는 URL';
+
+    // 뒤로가기
+    document.getElementById('btnBack').addEventListener('click', () => {
+      if (history.length > 1) {
+        history.back();
+      } else {
+        // 새 탭 페이지로 이동
+        chrome.tabs.update({ url: 'chrome://newtab' });
+      }
+    });
+
+    // 위험 감수하고 이동 → 2단계 확인
+    const confirmSection = document.getElementById('confirmSection');
+
+    document.getElementById('btnProceed').addEventListener('click', () => {
+      confirmSection.style.display = 'block';
+    });
+
+    document.getElementById('btnCancel').addEventListener('click', () => {
+      confirmSection.style.display = 'none';
+    });
+
+    document.getElementById('btnConfirm').addEventListener('click', () => {
+      if (!blockedUrl) return;
+
+      try {
+        const urlHost = new URL(blockedUrl).hostname;
+        chrome.storage.local.get(['allowedUrls'], (data) => {
+          const allowed = data.allowedUrls || [];
+          if (!allowed.includes(urlHost)) {
+            allowed.push(urlHost);
+          }
+          chrome.storage.local.set({ allowedUrls: allowed }, () => {
+            window.location.href = blockedUrl;
+          });
+        });
+      } catch {
+        window.location.href = blockedUrl;
+      }
+    });
+  </script>
+</body>
+</html>
