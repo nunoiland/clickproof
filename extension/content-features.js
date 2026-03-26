@@ -113,11 +113,22 @@
     const badgeColor = COLORS[result.riskLevel] || COLORS.safe;
     const label = LABELS[result.riskLevel] || '안전';
 
-    tooltip.innerHTML = `
-      <span class="cp-tooltip-url">${url.length > 80 ? url.slice(0, 80) + '...' : url}</span>
-      <span class="cp-tooltip-badge" style="background:${badgeColor}">${label}</span>
-      <span class="cp-tooltip-score">${result.score}점</span>
-    `;
+    tooltip.textContent = '';
+
+    const urlSpan = document.createElement('span');
+    urlSpan.className = 'cp-tooltip-url';
+    urlSpan.textContent = url.length > 80 ? url.slice(0, 80) + '...' : url;
+
+    const badgeSpan = document.createElement('span');
+    badgeSpan.className = 'cp-tooltip-badge';
+    badgeSpan.style.background = badgeColor;
+    badgeSpan.textContent = label;
+
+    const scoreSpan = document.createElement('span');
+    scoreSpan.className = 'cp-tooltip-score';
+    scoreSpan.textContent = result.score + '점';
+
+    tooltip.append(urlSpan, badgeSpan, scoreSpan);
 
     const x = Math.min(e.clientX + 12, window.innerWidth - 380);
     const y = Math.min(e.clientY + 16, window.innerHeight - 60);
@@ -233,10 +244,15 @@
     return host.includes('mail.google.com') || host.includes('mail.naver.com');
   }
 
-  // ── MutationObserver로 동적 콘텐츠 감시 ──
+  // ── MutationObserver로 동적 콘텐츠 감시 (debounce 적용) ──
+  let mutationTimer = null;
   const observer = new MutationObserver(() => {
-    scanSearchResults();
-    if (isEmailSite()) scanEmailLinks();
+    if (mutationTimer) return;
+    mutationTimer = setTimeout(() => {
+      mutationTimer = null;
+      scanSearchResults();
+      if (isEmailSite()) scanEmailLinks();
+    }, 300);
   });
 
   observer.observe(document.body, { childList: true, subtree: true });

@@ -90,9 +90,19 @@ async function blockIfDangerous(tabId, url, result) {
     // 금융기관 화이트리스트는 즉시 통과
     if (typeof isKoreanFinanceDomain === 'function' && isKoreanFinanceDomain(hostname)) return;
 
+    // 차단 전 현재 탭의 이전 URL을 저장 (뒤로가기용)
+    let previousUrl = '';
+    try {
+      const tab = await chrome.tabs.get(tabId);
+      if (tab.url && !tab.url.startsWith(chrome.runtime.getURL('warning.html'))) {
+        previousUrl = tab.url;
+      }
+    } catch { /* ignore */ }
+
     const warningUrl = chrome.runtime.getURL('warning.html')
       + '?url=' + encodeURIComponent(url)
-      + '&score=' + result.score;
+      + '&score=' + result.score
+      + (previousUrl ? '&back=' + encodeURIComponent(previousUrl) : '');
     chrome.tabs.update(tabId, { url: warningUrl });
   } catch {
     // URL 파싱 실패 시 무시

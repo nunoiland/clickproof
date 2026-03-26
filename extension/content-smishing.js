@@ -280,9 +280,11 @@
     const smishing = detectSmishing();
     if (smishing) showSmishingBanner(smishing);
 
-    // 인앱 브라우저 감지
+    // 인앱 브라우저 감지 (content.js에서 배너를 이미 표시한 경우 중복 방지)
     const inApp = detectInAppBrowser();
-    if (inApp) showInAppWarning(inApp);
+    if (inApp && !document.getElementById('clickproof-warning-banner')) {
+      showInAppWarning(inApp);
+    }
 
     // 단축 URL 클릭 인터셉트
     interceptShortLinks();

@@ -6,13 +6,13 @@
 const FirebaseDB = (() => {
   // ── 설정 ──
   const firebaseConfig = {
-    apiKey: 'AIzaSyC6Gw6xCAUBlWoy9sX2vQNhmFFFVCZ8sLY',
-    authDomain: 'clickproof.firebaseapp.com',
-    databaseURL: 'https://clickproof-default-rtdb.firebaseio.com',
-    projectId: 'clickproof',
-    storageBucket: 'clickproof.firebasestorage.app',
-    messagingSenderId: '462449109109',
-    appId: '1:462449109109:web:29cbe216afe40916edb03c',
+    apiKey: 'AIzaSyD7KYb5NEJViwuhIPPlKG0SZap-5d5mW-c',
+    authDomain: 'clickproof-21f7d.firebaseapp.com',
+    databaseURL: 'https://clickproof-21f7d-default-rtdb.asia-southeast1.firebasedatabase.app',
+    projectId: 'clickproof-21f7d',
+    storageBucket: 'clickproof-21f7d.firebasestorage.app',
+    messagingSenderId: '472763283806',
+    appId: '1:472763283806:web:14f19eeff4ea3c104eb7cf',
   };
 
   let app = null;

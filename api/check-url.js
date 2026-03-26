@@ -188,7 +188,16 @@ async function checkVirusTotal(url) {
 // ── Handler ─────────────────────────────────────────────────
 
 module.exports = async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  const allowedOrigins = [
+    'https://clickproof.vercel.app',
+    'https://clickproof.com',
+  ];
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  } else if (process.env.NODE_ENV === 'development') {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+  }
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
@@ -200,6 +209,10 @@ module.exports = async function handler(req, res) {
 
   if (!url) {
     return res.status(400).json({ error: 'url parameter is required' });
+  }
+
+  if (url.length > 2048) {
+    return res.status(400).json({ error: 'URL too long (max 2048 characters)' });
   }
 
   try {

@@ -187,6 +187,13 @@
     if (isFinancePage()) showFinanceBanner();
   });
 
-  // 동적 폼 감시
-  new MutationObserver(() => scanForms()).observe(document.body, { childList: true, subtree: true });
+  // 동적 폼 감시 (debounce 적용)
+  let formScanTimer = null;
+  new MutationObserver(() => {
+    if (formScanTimer) return;
+    formScanTimer = setTimeout(() => {
+      formScanTimer = null;
+      scanForms();
+    }, 300);
+  }).observe(document.body, { childList: true, subtree: true });
 })();

@@ -4,7 +4,7 @@
 //       js/webrtc.js  (window.WebRTCManager)
 // ============================================
 
-const db = window.FirebaseDB.db;
+const db = window.FirebaseDB.getDb();
 
 // ============================================
 // 상태
@@ -66,9 +66,10 @@ function formatTime(timestamp) {
 // ============================================
 function generateToken() {
     const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    const bytes = crypto.getRandomValues(new Uint8Array(6));
     let token = '';
     for (let i = 0; i < 6; i++) {
-        token += chars.charAt(Math.floor(Math.random() * chars.length));
+        token += chars.charAt(bytes[i] % chars.length);
     }
     return token;
 }
@@ -298,7 +299,7 @@ function createCard(token, data) {
     const deptHtml = department
         ? '<div class="card-dept">' + escapeHtml(department) + '</div>' : '';
     const screenThumbHtml = screenSharing
-        ? '<div class="card-screen-thumb" id="thumb-' + token + '"><span class="thumb-live">● LIVE</span></div>' : '';
+        ? '<div class="card-screen-thumb" id="thumb-' + escapeHtml(token) + '"><span class="thumb-live">● LIVE</span></div>' : '';
     const deviceRow = device
         ? '<div class="card-row"><span class="card-row-icon">▢</span><span class="card-row-label">DEVICE</span><span class="card-row-value">' + escapeHtml(device) + '</span></div>' : '';
     const ispVal = data.isp || (data.geo && data.geo.isp);
@@ -309,11 +310,11 @@ function createCard(token, data) {
 
     const cardClass = 'visitor-card' + (screenSharing ? ' has-screen-share' : '');
 
-    return '<div class="' + cardClass + '" id="card-' + token + '" data-token="' + token + '">' +
+    return '<div class="' + cardClass + '" id="card-' + escapeHtml(token) + '" data-token="' + escapeHtml(token) + '">' +
         '<div class="card-header"><div>' +
             '<div class="card-name">' + escapeHtml(name) + '</div>' +
             deptHtml +
-            '<div class="card-token">TOKEN: ' + token + '</div>' +
+            '<div class="card-token">TOKEN: ' + escapeHtml(token) + '</div>' +
         '</div><div class="card-badge">' +
             '<span class="badge badge-online">ONLINE</span>' +
             incognitoBadge + screenBadge +

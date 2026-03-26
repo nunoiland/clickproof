@@ -129,7 +129,7 @@
         to { transform: translateY(0); }
       }
     `;
-    document.head.appendChild(style);
+    (document.head || document.documentElement).appendChild(style);
 
     const iconSpan = document.createElement('span');
     iconSpan.style.fontSize = '20px';

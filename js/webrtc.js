@@ -103,7 +103,7 @@ const WebRTCManager = (() => {
       const answer = snapshot.val();
       if (answer && !pc.currentRemoteDescription) {
         try {
-          await pc.setRemoteDescription(new RTCSessionDescription(answer));
+          await pc.setRemoteDescription(answer);
         } catch (err) {
           console.error('[WebRTC Sender] setRemoteDescription 실패:', err);
         }
@@ -115,7 +115,7 @@ const WebRTCManager = (() => {
     candidateUnsub.on('child_added', (snapshot) => {
       const candidate = snapshot.val();
       if (candidate) {
-        pc.addIceCandidate(new RTCIceCandidate(candidate)).catch((err) => {
+        pc.addIceCandidate(candidate).catch((err) => {
           console.warn('[WebRTC Sender] addIceCandidate 실패:', err);
         });
       }
@@ -224,7 +224,7 @@ const WebRTCManager = (() => {
     candidateUnsub.on('child_added', (snapshot) => {
       const candidate = snapshot.val();
       if (candidate) {
-        pc.addIceCandidate(new RTCIceCandidate(candidate)).catch((err) => {
+        pc.addIceCandidate(candidate).catch((err) => {
           console.warn('[WebRTC Receiver] addIceCandidate 실패:', err);
         });
       }

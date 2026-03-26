@@ -179,17 +179,18 @@
     const params = new URLSearchParams(window.location.search);
     const blockedUrl = params.get('url') || '';
     const score = params.get('score') || '0';
+    const backUrl = params.get('back') || '';
 
     document.getElementById('score').textContent = score;
     document.getElementById('blockedUrl').textContent = blockedUrl || '알 수 없는 URL';
 
-    // 뒤로가기
+    // 뒤로가기 — 저장된 이전 URL로 이동 (무한 루프 방지)
     document.getElementById('btnBack').addEventListener('click', () => {
-      if (history.length > 1) {
-        history.back();
+      if (backUrl && backUrl !== blockedUrl) {
+        window.location.href = backUrl;
       } else {
-        // 새 탭 페이지로 이동
-        chrome.tabs.update({ url: 'chrome://newtab' });
+        // 이전 URL이 없으면 새 탭으로
+        window.location.href = 'about:newtab';
       }
     });
 

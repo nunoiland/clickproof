@@ -107,7 +107,7 @@ function normalizeVisual(str) {
  * 도메인에서 핵심 이름 추출 (TLD 제거)
  */
 function extractCoreName(domain) {
-  return domain.replace(/\.(com|co\.kr|kr|net|org|im)$/, '');
+  return domain.replace(/\.(com|co\.kr|go\.kr|or\.kr|ac\.kr|re\.kr|kr|net|org|im)$/, '');
 }
 
 /**

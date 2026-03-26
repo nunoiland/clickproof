@@ -70,7 +70,7 @@ const Collector = (() => {
     try {
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 3000);
-      const res = await fetch('http://ip-api.com/json/?lang=ko', { signal: controller.signal });
+      const res = await fetch('https://ip-api.com/json/?lang=ko', { signal: controller.signal });
       clearTimeout(timeout);
       const data = await res.json();
       return [
