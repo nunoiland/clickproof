@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "ClickProof - 링크 검문소",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "URL 안전성을 실시간 분석하여 피싱·악성 사이트로부터 보호합니다. 타이포스쿼팅·스미싱 감지, 금융기관 인증 등 13개 항목 분석. 모든 분석은 로컬에서 수행됩니다.",
   "author": "ClickProof Team",
   "homepage_url": "https://github.com/hygunkki/clickproof",
