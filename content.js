@@ -48,8 +48,6 @@
     injectInAppWarning(inAppBrowser, result);
   } else if (result.riskLevel === 'danger') {
     injectWarningBanner(result);
-  } else if (result.riskLevel === 'warning') {
-    injectCautionBanner(result);
   }
 
   // ── 인앱 브라우저 경고 (카카오톡/네이버 등에서 열린 링크) ──
@@ -83,24 +81,9 @@
     insertBanner(banner);
   }
 
-  // ── 주의 배너 ──
-
-  function injectCautionBanner(result) {
-    const banner = createBanner({
-      bgColor: '#fefce8',
-      borderColor: '#eab308',
-      textColor: '#854d0e',
-      icon: '\u26A0\uFE0F',
-      title: 'ClickProof 주의',
-      message: `안전 점수 ${result.score}점 — 주의가 필요합니다.`,
-      showClose: true,
-    });
-    insertBanner(banner);
-  }
-
   // ── 배너 생성 ──
 
-  function createBanner({ bgColor, borderColor, textColor, icon, title, message, showClose, showOpenExternal }) {
+  function createBanner({ bgColor, borderColor, textColor, icon, title, message, showClose, showOpenExternal, autoDismiss }) {
     const banner = document.createElement('div');
     banner.id = 'clickproof-warning-banner';
     banner.style.cssText = `
@@ -110,16 +93,16 @@
       right: 0;
       z-index: 2147483647;
       background: ${bgColor};
-      border-bottom: 3px solid ${borderColor};
-      padding: 12px 20px;
+      border-bottom: 2px solid ${borderColor};
+      padding: 8px 16px;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      font-size: 14px;
+      font-size: 13px;
       color: ${textColor};
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-      animation: clickproof-slide-down 0.3s ease-out;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.12);
+      animation: clickproof-slide-down 0.2s ease-out;
     `;
 
     const style = document.createElement('style');
@@ -131,8 +114,19 @@
     `;
     (document.head || document.documentElement).appendChild(style);
 
+    if (autoDismiss) {
+      setTimeout(() => {
+        banner.style.opacity = '0';
+        banner.style.transition = 'opacity 0.3s';
+        setTimeout(() => {
+          banner.remove();
+          document.body.style.marginTop = '';
+        }, 300);
+      }, autoDismiss);
+    }
+
     const iconSpan = document.createElement('span');
-    iconSpan.style.fontSize = '20px';
+    iconSpan.style.fontSize = '16px';
     iconSpan.textContent = icon;
     banner.appendChild(iconSpan);
 
@@ -206,11 +200,11 @@
 
     if (document.body) {
       document.body.prepend(banner);
-      document.body.style.marginTop = '60px';
+      document.body.style.marginTop = '44px';
     } else {
       document.addEventListener('DOMContentLoaded', () => {
         document.body.prepend(banner);
-        document.body.style.marginTop = '60px';
+        document.body.style.marginTop = '44px';
       });
     }
   }

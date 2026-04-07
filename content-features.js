@@ -21,7 +21,6 @@
 
   const COLORS = { safe: '#22c55e', warning: '#eab308', danger: '#ef4444' };
   const LABELS = { safe: '안전', warning: '주의', danger: '위험' };
-  const ICONS = { safe: '✓', warning: '?', danger: '!' };
 
   // ── 스타일 삽입 ──
   const style = document.createElement('style');
@@ -62,20 +61,6 @@
       color: #ccc;
       margin-left: 8px;
       font-size: 11px;
-    }
-    .cp-search-badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      font-size: 10px;
-      font-weight: 700;
-      color: #fff;
-      margin-left: 4px;
-      vertical-align: middle;
-      flex-shrink: 0;
     }
     .cp-email-danger {
       outline: 2px solid #ef4444 !important;
@@ -157,50 +142,7 @@
   });
 
   // ══════════════════════════════════════
-  // 2. 검색 결과 안전 뱃지
-  // ══════════════════════════════════════
-  function addSearchBadge(linkEl) {
-    if (linkEl.querySelector('.cp-search-badge')) return;
-    const href = linkEl.href;
-    if (!href || href.startsWith('javascript:')) return;
-
-    const result = getCachedAnalysis(href);
-    if (!result) return;
-
-    const badge = document.createElement('span');
-    badge.className = 'cp-search-badge';
-    badge.style.background = COLORS[result.riskLevel] || COLORS.safe;
-    badge.textContent = ICONS[result.riskLevel] || '✓';
-    badge.title = `안전도 ${result.score}점 (${LABELS[result.riskLevel]})`;
-
-    linkEl.appendChild(badge);
-  }
-
-  function scanSearchResults() {
-    const host = location.hostname;
-
-    // Google
-    if (host.includes('google.')) {
-      document.querySelectorAll('#search a[href]:not([href^="javascript"]) h3').forEach(h3 => {
-        const a = h3.closest('a');
-        if (a) addSearchBadge(a);
-      });
-    }
-
-    // Naver
-    if (host.includes('naver.com')) {
-      document.querySelectorAll('.total_tit a, .api_txt_lines, .link_tit').forEach(a => {
-        if (a.tagName === 'A') addSearchBadge(a);
-        else {
-          const link = a.closest('a');
-          if (link) addSearchBadge(link);
-        }
-      });
-    }
-  }
-
-  // ══════════════════════════════════════
-  // 3. 이메일 링크 하이라이트
+  // 2. 이메일 링크 하이라이트
   // ══════════════════════════════════════
   function unwrapGoogleRedirect(href) {
     try {
@@ -250,7 +192,6 @@
     if (mutationTimer) return;
     mutationTimer = setTimeout(() => {
       mutationTimer = null;
-      scanSearchResults();
       if (isEmailSite()) scanEmailLinks();
     }, 300);
   });
@@ -258,6 +199,5 @@
   observer.observe(document.body, { childList: true, subtree: true });
 
   // 초기 실행
-  scanSearchResults();
   if (isEmailSite()) scanEmailLinks();
 })();

@@ -115,7 +115,7 @@
 
     const warn = document.createElement('div');
     warn.className = 'cp-form-warn' + (isCritical ? ' critical' : '');
-    warn.innerHTML = isCritical
+    warn.textContent = isCritical
       ? '⚠ 이 사이트는 암호화되지 않은 연결(HTTP)입니다. 비밀번호가 그대로 노출될 수 있습니다.'
       : `⚠ 이 사이트의 안전도가 낮습니다 (${siteResult.score}점). 개인정보 입력에 주의하세요.`;
 
@@ -164,14 +164,14 @@
     banner.className = 'cp-finance-banner ' + (isWhitelisted ? 'safe' : 'danger');
 
     if (isWhitelisted) {
-      banner.innerHTML = '🏦 공식 인증된 금융기관 도메인입니다';
+      banner.textContent = '🏦 공식 인증된 금융기관 도메인입니다';
       document.body.prepend(banner);
       setTimeout(() => {
         banner.style.opacity = '0';
         setTimeout(() => banner.remove(), 500);
       }, 3000);
     } else {
-      banner.innerHTML = '⚠ 이 사이트는 공식 금융기관 도메인이 아닙니다. 금융 정보 입력에 주의하세요.';
+      banner.textContent = '⚠ 이 사이트는 공식 금융기관 도메인이 아닙니다. 금융 정보 입력에 주의하세요.';
       const close = document.createElement('button');
       close.className = 'cp-finance-close';
       close.textContent = '×';

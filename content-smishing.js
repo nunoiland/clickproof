@@ -144,9 +144,9 @@
 
     const banner = document.createElement('div');
     banner.className = 'cp-smishing-banner';
-    banner.innerHTML = `
-      <span>🚨 스미싱 의심 페이지 — ${categories} 패턴이 감지되었습니다</span>
-    `;
+    const msgSpan = document.createElement('span');
+    msgSpan.textContent = `🚨 스미싱 의심 페이지 — ${categories} 패턴이 감지되었습니다`;
+    banner.appendChild(msgSpan);
 
     const closeBtn = document.createElement('button');
     closeBtn.textContent = '닫기';

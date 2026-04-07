@@ -184,12 +184,18 @@
     document.getElementById('score').textContent = score;
     document.getElementById('blockedUrl').textContent = blockedUrl || '알 수 없는 URL';
 
+    function isSafeUrl(url) {
+      try {
+        const parsed = new URL(url);
+        return parsed.protocol === 'https:' || parsed.protocol === 'http:';
+      } catch { return false; }
+    }
+
     // 뒤로가기 — 저장된 이전 URL로 이동 (무한 루프 방지)
     document.getElementById('btnBack').addEventListener('click', () => {
-      if (backUrl && backUrl !== blockedUrl) {
+      if (backUrl && backUrl !== blockedUrl && isSafeUrl(backUrl)) {
         window.location.href = backUrl;
       } else {
-        // 이전 URL이 없으면 새 탭으로
         window.location.href = 'about:newtab';
       }
     });
@@ -211,10 +217,10 @@
       try {
         const urlHost = new URL(blockedUrl).hostname;
         chrome.storage.local.get(['allowedUrls'], (data) => {
-          const allowed = data.allowedUrls || [];
-          if (!allowed.includes(urlHost)) {
-            allowed.push(urlHost);
-          }
+          const allowed = (data.allowedUrls || []).filter(e =>
+            typeof e === 'object' && e.hostname !== urlHost
+          );
+          allowed.push({ hostname: urlHost, ts: Date.now() });
           chrome.storage.local.set({ allowedUrls: allowed }, () => {
             window.location.href = blockedUrl;
           });

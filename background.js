@@ -24,10 +24,23 @@ function isInternalUrl(url) {
 /**
  * 사용자가 허용한 도메인인지 확인
  */
+const ALLOW_EXPIRY_MS = 30 * 24 * 60 * 60 * 1000; // 30일
+
 async function isAllowedUrl(hostname) {
   const data = await chrome.storage.local.get(['allowedUrls']);
   const allowed = data.allowedUrls || [];
-  return allowed.includes(hostname);
+  const now = Date.now();
+  const valid = allowed.filter(entry =>
+    typeof entry === 'object' ? (entry.hostname === hostname && now - entry.ts < ALLOW_EXPIRY_MS) : false
+  );
+  // 만료된 항목 정리
+  const cleaned = allowed.filter(entry =>
+    typeof entry === 'object' && now - entry.ts < ALLOW_EXPIRY_MS
+  );
+  if (cleaned.length !== allowed.length) {
+    chrome.storage.local.set({ allowedUrls: cleaned });
+  }
+  return valid.length > 0;
 }
 
 /**
